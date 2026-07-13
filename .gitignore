@@ -1,0 +1,29 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+
+## Visual Studio / Rider
+.vs/
+.idea/
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
+
+## Secrets — ne jamais commiter de vraies clés JWT / connection strings
+appsettings.*.local.json
+*.pfx
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Claude Code
+.claude/

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracksys.Modules.Alerting.Domain\Tracksys.Modules.Alerting.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Tracksys.Shared.Kernel\Tracksys.Shared.Kernel.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

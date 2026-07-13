@@ -1,0 +1,14 @@
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Tracksys.Modules.Citizen.Application.Services;
+
+namespace Tracksys.Modules.Citizen.Api;
+
+public static class CitizenApiModule
+{
+    public static IMvcBuilder AddCitizenApiModule(this IMvcBuilder builder)
+    {
+        builder.Services.AddScoped<ComplaintQueryService>();
+        return builder.AddApplicationPart(Assembly.GetExecutingAssembly());
+    }
+}

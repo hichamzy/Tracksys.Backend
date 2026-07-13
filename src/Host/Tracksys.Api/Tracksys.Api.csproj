@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Tracksys.Shared.Kernel\Tracksys.Shared.Kernel.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\Tracksys.Modules.Identity.Api\Tracksys.Modules.Identity.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\Tracksys.Modules.Identity.Infrastructure\Tracksys.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Fleet\Tracksys.Modules.Fleet.Api\Tracksys.Modules.Fleet.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Fleet\Tracksys.Modules.Fleet.Infrastructure\Tracksys.Modules.Fleet.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Citizen\Tracksys.Modules.Citizen.Api\Tracksys.Modules.Citizen.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Citizen\Tracksys.Modules.Citizen.Infrastructure\Tracksys.Modules.Citizen.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Alerting\Tracksys.Modules.Alerting.Api\Tracksys.Modules.Alerting.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Alerting\Tracksys.Modules.Alerting.Infrastructure\Tracksys.Modules.Alerting.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

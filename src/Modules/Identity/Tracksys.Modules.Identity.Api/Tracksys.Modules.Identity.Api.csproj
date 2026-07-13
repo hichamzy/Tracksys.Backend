@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracksys.Modules.Identity.Application\Tracksys.Modules.Identity.Application.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Identity.Infrastructure\Tracksys.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Identity.Domain\Tracksys.Modules.Identity.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

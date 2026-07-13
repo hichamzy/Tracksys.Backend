@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracksys.Modules.Alerting.Application\Tracksys.Modules.Alerting.Application.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Alerting.Infrastructure\Tracksys.Modules.Alerting.Infrastructure.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Alerting.Domain\Tracksys.Modules.Alerting.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

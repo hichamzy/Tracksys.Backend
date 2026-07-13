@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/Host/">
+    <Project Path="src/Host/Tracksys.Api/Tracksys.Api.csproj" />
+  </Folder>
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Alerting/">
+    <Project Path="src/Modules/Alerting/Tracksys.Modules.Alerting.Api/Tracksys.Modules.Alerting.Api.csproj" />
+    <Project Path="src/Modules/Alerting/Tracksys.Modules.Alerting.Application/Tracksys.Modules.Alerting.Application.csproj" />
+    <Project Path="src/Modules/Alerting/Tracksys.Modules.Alerting.Domain/Tracksys.Modules.Alerting.Domain.csproj" />
+    <Project Path="src/Modules/Alerting/Tracksys.Modules.Alerting.Infrastructure/Tracksys.Modules.Alerting.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Citizen/">
+    <Project Path="src/Modules/Citizen/Tracksys.Modules.Citizen.Api/Tracksys.Modules.Citizen.Api.csproj" />
+    <Project Path="src/Modules/Citizen/Tracksys.Modules.Citizen.Application/Tracksys.Modules.Citizen.Application.csproj" />
+    <Project Path="src/Modules/Citizen/Tracksys.Modules.Citizen.Domain/Tracksys.Modules.Citizen.Domain.csproj" />
+    <Project Path="src/Modules/Citizen/Tracksys.Modules.Citizen.Infrastructure/Tracksys.Modules.Citizen.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Fleet/">
+    <Project Path="src/Modules/Fleet/Tracksys.Modules.Fleet.Api/Tracksys.Modules.Fleet.Api.csproj" />
+    <Project Path="src/Modules/Fleet/Tracksys.Modules.Fleet.Application/Tracksys.Modules.Fleet.Application.csproj" />
+    <Project Path="src/Modules/Fleet/Tracksys.Modules.Fleet.Domain/Tracksys.Modules.Fleet.Domain.csproj" />
+    <Project Path="src/Modules/Fleet/Tracksys.Modules.Fleet.Infrastructure/Tracksys.Modules.Fleet.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Identity/">
+    <Project Path="src/Modules/Identity/Tracksys.Modules.Identity.Api/Tracksys.Modules.Identity.Api.csproj" />
+    <Project Path="src/Modules/Identity/Tracksys.Modules.Identity.Application/Tracksys.Modules.Identity.Application.csproj" />
+    <Project Path="src/Modules/Identity/Tracksys.Modules.Identity.Domain/Tracksys.Modules.Identity.Domain.csproj" />
+    <Project Path="src/Modules/Identity/Tracksys.Modules.Identity.Infrastructure/Tracksys.Modules.Identity.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="src/Shared/Tracksys.Shared.Infrastructure/Tracksys.Shared.Infrastructure.csproj" />
+    <Project Path="src/Shared/Tracksys.Shared.Kernel/Tracksys.Shared.Kernel.csproj" />
+  </Folder>
+</Solution>

@@ -16,7 +16,6 @@ public class CitizenDbContext(DbContextOptions<CitizenDbContext> options) : Modu
 
         modelBuilder.Entity<ComplaintCategory>(b =>
         {
-            b.ToTable("ComplaintCategories");
             b.HasKey(c => c.Id);
             b.Property(c => c.Label).HasMaxLength(100).IsRequired();
             b.HasIndex(c => c.Label).IsUnique();
@@ -25,7 +24,6 @@ public class CitizenDbContext(DbContextOptions<CitizenDbContext> options) : Modu
 
         modelBuilder.Entity<Complaint>(b =>
         {
-            b.ToTable("Complaints");
             b.HasKey(c => c.Id);
             b.Property(c => c.Code).HasMaxLength(20).IsRequired();
             b.HasIndex(c => c.Code).IsUnique();
@@ -39,7 +37,7 @@ public class CitizenDbContext(DbContextOptions<CitizenDbContext> options) : Modu
 
             b.Property(c => c.Status)
                 .HasConversion(s => s.ToCode(), code => ComplaintStatusExtensions.FromCode(code))
-                .HasColumnName("StatusCode")
+                .HasColumnName("status_code")
                 .HasMaxLength(10)
                 .IsRequired();
 

@@ -10,11 +10,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddAlertingModule(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("SqlServer")
-            ?? throw new InvalidOperationException("Connection string 'SqlServer' introuvable.");
+        string connectionString = configuration.GetConnectionString("PostgreSql")
+            ?? throw new InvalidOperationException("Connection string 'PostgreSql' introuvable.");
 
         services.AddDbContext<AlertingDbContext>(options =>
-            options.UseSqlServer(connectionString, sql => sql.MigrationsHistoryTable("__EFMigrationsHistory", "alerting")));
+            options
+                .UseNpgsql(connectionString, npgsql => npgsql.MigrationsHistoryTable("__ef_migrations_history", "alerting"))
+                .UseSnakeCaseNamingConvention());
 
         services.AddScoped<IAlertingUnitOfWork, AlertingUnitOfWork>();
 

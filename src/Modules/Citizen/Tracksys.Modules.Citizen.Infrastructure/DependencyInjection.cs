@@ -10,11 +10,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCitizenModule(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("SqlServer")
-            ?? throw new InvalidOperationException("Connection string 'SqlServer' introuvable.");
+        string connectionString = configuration.GetConnectionString("PostgreSql")
+            ?? throw new InvalidOperationException("Connection string 'PostgreSql' introuvable.");
 
         services.AddDbContext<CitizenDbContext>(options =>
-            options.UseSqlServer(connectionString, sql => sql.MigrationsHistoryTable("__EFMigrationsHistory", "citizen")));
+            options
+                .UseNpgsql(connectionString, npgsql => npgsql.MigrationsHistoryTable("__ef_migrations_history", "citizen"))
+                .UseSnakeCaseNamingConvention());
 
         services.AddScoped<ICitizenUnitOfWork, CitizenUnitOfWork>();
 

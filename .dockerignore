@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.idea/
+.git/
+.gitignore
+.env
+.env.local
+.env.example
+docker-compose.yml
+database/
+*.md

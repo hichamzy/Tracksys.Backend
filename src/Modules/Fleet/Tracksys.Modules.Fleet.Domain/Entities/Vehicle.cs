@@ -1,5 +1,6 @@
 using Tracksys.Modules.Fleet.Domain.Enums;
 using Tracksys.Shared.Kernel.Entities;
+using Tracksys.Shared.Kernel.Guards;
 
 namespace Tracksys.Modules.Fleet.Domain.Entities;
 
@@ -12,6 +13,10 @@ public class Vehicle : AuditableEntity<int>, IAggregateRoot
     public VehicleStatus Status { get; private set; } = VehicleStatus.Idle;
     public string? Zone { get; private set; }
     public string? ImeiTracker { get; private set; }
+
+    /// <summary>Identifiant déclaré par le tracker à Flespi (`ident`) — PAS nécessairement l'IMEI (peut différer selon le device/protocole). Clé de corrélation avec la télémétrie GPS. Distinct d'ImeiTracker (libellé d'affichage libre).</summary>
+    public string? FlespiIdent { get; private set; }
+
     public decimal SpeedKmh { get; private set; }
     public decimal DistanceTodayKm { get; private set; }
     public string? DriveTimeToday { get; private set; }
@@ -22,15 +27,18 @@ public class Vehicle : AuditableEntity<int>, IAggregateRoot
 
     private Vehicle() { }
 
-    public static Vehicle Create(string code, string plateNumber, int vehicleTypeId, string? zone, string? imeiTracker) => new()
+    public static Vehicle Create(string code, string plateNumber, int vehicleTypeId, string? zone, string? imeiTracker, string? flespiIdent = null) => new()
     {
         Code = code,
         PlateNumber = plateNumber,
         VehicleTypeId = vehicleTypeId,
         Zone = zone,
         ImeiTracker = imeiTracker,
+        FlespiIdent = flespiIdent,
         Status = VehicleStatus.Idle,
     };
+
+    public void SetFlespiIdent(string flespiIdent) => FlespiIdent = flespiIdent;
 
     public void AssignDriver(int driverId) => DriverId = driverId;
 
@@ -42,13 +50,13 @@ public class Vehicle : AuditableEntity<int>, IAggregateRoot
         UpdatedAtUtc = DateTime.UtcNow;
     }
 
-    /// <summary>Met à jour le cache de position — source de vérité : le service qui lit PostgreSQL/PostGIS.</summary>
+    /// <summary>Met à jour le cache de position — source de vérité : ingestion.last_position.</summary>
     public void UpdateLastKnownPosition(decimal lat, decimal lng, decimal speedKmh, DateTime observedAtUtc)
     {
         LastKnownLat = lat;
         LastKnownLng = lng;
         SpeedKmh = speedKmh;
-        LastPositionAtUtc = observedAtUtc;
+        LastPositionAtUtc = DateTimeGuard.EnsureUtc(observedAtUtc, nameof(observedAtUtc));
         UpdatedAtUtc = DateTime.UtcNow;
     }
 }

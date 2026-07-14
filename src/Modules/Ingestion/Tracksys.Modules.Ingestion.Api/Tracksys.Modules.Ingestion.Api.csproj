@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracksys.Modules.Ingestion.Application\Tracksys.Modules.Ingestion.Application.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Ingestion.Infrastructure\Tracksys.Modules.Ingestion.Infrastructure.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Ingestion.Domain\Tracksys.Modules.Ingestion.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

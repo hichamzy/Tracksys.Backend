@@ -19,4 +19,14 @@ public class ComplaintCategory : Entity<int>
         DefaultPriority = defaultPriority,
         SlaHours = slaHours,
     };
+
+    public void UpdateDetails(string label, string? icon, string defaultPriority, int slaHours)
+    {
+        Label = label;
+        Icon = icon;
+        DefaultPriority = defaultPriority;
+        SlaHours = slaHours;
+    }
+
+    public void SetActive(bool isActive) => IsActive = isActive;
 }

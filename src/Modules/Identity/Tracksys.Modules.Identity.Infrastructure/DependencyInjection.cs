@@ -16,11 +16,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("SqlServer")
-            ?? throw new InvalidOperationException("Connection string 'SqlServer' introuvable.");
+        string connectionString = configuration.GetConnectionString("PostgreSql")
+            ?? throw new InvalidOperationException("Connection string 'PostgreSql' introuvable.");
 
         services.AddDbContext<IdentityDbContext>(options =>
-            options.UseSqlServer(connectionString, sql => sql.MigrationsHistoryTable("__EFMigrationsHistory", "identity")));
+            options
+                .UseNpgsql(connectionString, npgsql => npgsql.MigrationsHistoryTable("__ef_migrations_history", "identity"))
+                .UseSnakeCaseNamingConvention());
 
         services
             .AddIdentityCore<ApplicationUser>(options =>
@@ -39,6 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<AuthService>();
+        services.AddScoped<UserService>();
 
         return services;
     }

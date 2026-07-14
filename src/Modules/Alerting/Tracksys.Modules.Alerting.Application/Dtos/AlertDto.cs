@@ -4,7 +4,11 @@ public record AlertDto(
     long Id,
     string Code,
     string AlertTypeCode,
+    string AlertTypeLabel,
+    string Severity,
     int VehicleId,
     string DetailText,
     DateTime OccurredAtUtc,
-    bool IsUnread);
+    bool IsUnread,
+    DateTime? ReadAtUtc,
+    string? ReadByUserId);

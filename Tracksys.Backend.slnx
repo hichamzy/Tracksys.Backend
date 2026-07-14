@@ -27,6 +27,12 @@
     <Project Path="src/Modules/Identity/Tracksys.Modules.Identity.Domain/Tracksys.Modules.Identity.Domain.csproj" />
     <Project Path="src/Modules/Identity/Tracksys.Modules.Identity.Infrastructure/Tracksys.Modules.Identity.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Modules/Ingestion/">
+    <Project Path="src/Modules/Ingestion/Tracksys.Modules.Ingestion.Api/Tracksys.Modules.Ingestion.Api.csproj" />
+    <Project Path="src/Modules/Ingestion/Tracksys.Modules.Ingestion.Application/Tracksys.Modules.Ingestion.Application.csproj" />
+    <Project Path="src/Modules/Ingestion/Tracksys.Modules.Ingestion.Domain/Tracksys.Modules.Ingestion.Domain.csproj" />
+    <Project Path="src/Modules/Ingestion/Tracksys.Modules.Ingestion.Infrastructure/Tracksys.Modules.Ingestion.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Shared/">
     <Project Path="src/Shared/Tracksys.Shared.Infrastructure/Tracksys.Shared.Infrastructure.csproj" />
     <Project Path="src/Shared/Tracksys.Shared.Kernel/Tracksys.Shared.Kernel.csproj" />

@@ -1,4 +1,5 @@
 using Tracksys.Shared.Kernel.Entities;
+using Tracksys.Shared.Kernel.Guards;
 
 namespace Tracksys.Modules.Identity.Domain.Entities;
 
@@ -21,7 +22,7 @@ public class RefreshToken : Entity<long>, IAggregateRoot
         {
             UserId = userId,
             TokenHash = tokenHash,
-            ExpiresAtUtc = expiresAtUtc,
+            ExpiresAtUtc = DateTimeGuard.EnsureUtc(expiresAtUtc, nameof(expiresAtUtc)),
             CreatedByIp = createdByIp,
         };
 

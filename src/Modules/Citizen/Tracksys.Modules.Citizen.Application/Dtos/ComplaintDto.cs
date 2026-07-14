@@ -4,10 +4,15 @@ public record ComplaintDto(
     int Id,
     string Code,
     int CategoryId,
+    string CategoryLabel,
     string Priority,
     string Status,
     string ZoneLabel,
     decimal Lat,
     decimal Lng,
     int? AssignedVehicleId,
-    DateTime ReportedAtUtc);
+    string? ReporterName,
+    DateTime ReportedAtUtc,
+    DateTime? ResolvedAtUtc,
+    string? PhotoBeforeUrl,
+    string? PhotoAfterUrl);

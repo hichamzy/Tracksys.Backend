@@ -1,13 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>66b856b8-8d3b-4a22-9173-81bc8f266be7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.17" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +25,10 @@
     <ProjectReference Include="..\..\Modules\Citizen\Tracksys.Modules.Citizen.Infrastructure\Tracksys.Modules.Citizen.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Alerting\Tracksys.Modules.Alerting.Api\Tracksys.Modules.Alerting.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Alerting\Tracksys.Modules.Alerting.Infrastructure\Tracksys.Modules.Alerting.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Ingestion\Tracksys.Modules.Ingestion.Api\Tracksys.Modules.Ingestion.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Ingestion\Tracksys.Modules.Ingestion.Infrastructure\Tracksys.Modules.Ingestion.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Reports\Tracksys.Modules.Reports.Api\Tracksys.Modules.Reports.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Reports\Tracksys.Modules.Reports.Infrastructure\Tracksys.Modules.Reports.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

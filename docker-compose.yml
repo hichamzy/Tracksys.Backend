@@ -1,0 +1,31 @@
+# Environnement de dev local — PostgreSQL + PostGIS + TimescaleDB (édition TSL complète).
+# Image officielle timescale/timescaledb-ha : embarque PostGIS, pas besoin d'installer
+# l'extension séparément. Sert de référence pour le scénario 2A de 002_telemetry.sql
+# (hypertable + compression native) — pas nécessairement représentatif de la prod si
+# l'hébergement cible s'avère être Azure Flexible Server (Apache-2 seul, scénario 2B).
+#
+# Démarrage : docker compose up -d
+# Connexion : Host=localhost;Port=5432;Database=tracksys;Username=tracksys_app;Password=<voir .env>
+
+services:
+  postgres:
+    image: timescale/timescaledb-ha:pg16-all
+    container_name: tracksys-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tracksys
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?Définir POSTGRES_SUPERUSER_PASSWORD dans .env}
+    ports:
+      - "5432:5432"
+    volumes:
+      - tracksys_postgres_data:/home/postgres/pgdata/data
+      - ./database/postgresql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tracksys"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tracksys_postgres_data:

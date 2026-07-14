@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracksys.Modules.Ingestion.Application\Tracksys.Modules.Ingestion.Application.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Ingestion.Domain\Tracksys.Modules.Ingestion.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Tracksys.Shared.Kernel\Tracksys.Shared.Kernel.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Tracksys.Shared.Infrastructure\Tracksys.Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Fleet\Tracksys.Modules.Fleet.Domain\Tracksys.Modules.Fleet.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql" Version="9.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Npgsql.NetTopologySuite" Version="9.0.4" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

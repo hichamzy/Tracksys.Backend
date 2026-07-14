@@ -16,16 +16,16 @@ public class AlertingDbContext(DbContextOptions<AlertingDbContext> options) : Mo
 
         modelBuilder.Entity<AlertType>(b =>
         {
-            b.ToTable("AlertTypes");
             b.HasKey(t => t.Id);
-            b.Property(t => t.Id).HasMaxLength(20).ValueGeneratedNever();
+            // AlertType.Id représente la colonne "code" (PK métier), pas une colonne "id" —
+            // sans ce mapping explicite, la convention snake_case génère "id" qui n'existe pas.
+            b.Property(t => t.Id).HasColumnName("code").HasMaxLength(20).ValueGeneratedNever();
             b.Property(t => t.Label).HasMaxLength(100).IsRequired();
             b.Property(t => t.Severity).HasMaxLength(2).IsRequired();
         });
 
         modelBuilder.Entity<AlertRule>(b =>
         {
-            b.ToTable("AlertRules");
             b.HasKey(r => r.Id);
             b.Property(r => r.AlertTypeCode).HasMaxLength(20).IsRequired();
             b.HasIndex(r => r.AlertTypeCode).IsUnique();
@@ -40,7 +40,6 @@ public class AlertingDbContext(DbContextOptions<AlertingDbContext> options) : Mo
 
         modelBuilder.Entity<Alert>(b =>
         {
-            b.ToTable("Alerts");
             b.HasKey(a => a.Id);
             b.Property(a => a.Code).HasMaxLength(20).IsRequired();
             b.HasIndex(a => a.Code).IsUnique();

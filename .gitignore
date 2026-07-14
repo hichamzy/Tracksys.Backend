@@ -20,6 +20,10 @@ x86/
 ## Secrets — ne jamais commiter de vraies clés JWT / connection strings
 appsettings.*.local.json
 *.pfx
+.env
+.env.local
+.env.*.local
+*.local.txt
 
 ## OS
 .DS_Store

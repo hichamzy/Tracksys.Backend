@@ -9,4 +9,10 @@ public record VehicleDto(
     decimal SpeedKmh,
     decimal DistanceTodayKm,
     decimal? LastKnownLat,
-    decimal? LastKnownLng);
+    decimal? LastKnownLng,
+    string? DriveTimeToday,
+    string? LastStopLabel,
+    string? DriverName,
+    string? VehicleTypeLabel,
+    string? ImeiTracker,
+    string? FlespiIdent);

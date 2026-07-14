@@ -10,11 +10,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddFleetModule(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("SqlServer")
-            ?? throw new InvalidOperationException("Connection string 'SqlServer' introuvable.");
+        string connectionString = configuration.GetConnectionString("PostgreSql")
+            ?? throw new InvalidOperationException("Connection string 'PostgreSql' introuvable.");
 
         services.AddDbContext<FleetDbContext>(options =>
-            options.UseSqlServer(connectionString, sql => sql.MigrationsHistoryTable("__EFMigrationsHistory", "fleet")));
+            options
+                .UseNpgsql(connectionString, npgsql => npgsql.MigrationsHistoryTable("__ef_migrations_history", "fleet"))
+                .UseSnakeCaseNamingConvention());
 
         services.AddScoped<IFleetUnitOfWork, FleetUnitOfWork>();
 

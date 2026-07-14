@@ -15,6 +15,8 @@ using Tracksys.Modules.Ingestion.Api;
 using Tracksys.Modules.Ingestion.Infrastructure;
 using Tracksys.Modules.Reports.Api;
 using Tracksys.Modules.Reports.Infrastructure;
+using Tracksys.Modules.Ingestion.Application.Abstractions;
+using Tracksys.Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,10 @@ builder.Services.AddCitizenModule(builder.Configuration);
 builder.Services.AddAlertingModule(builder.Configuration);
 builder.Services.AddIngestionModule(builder.Configuration);
 builder.Services.AddReportsModule(builder.Configuration);
+
+// ----- Temps réel positions (SignalR) — push après chaque ingestion Flespi réussie -----
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IPositionBroadcaster, SignalRPositionBroadcaster>();
 
 // ----- Contrôleurs des modules (Api layer de chaque module, montés dans le Host) -----
 var mvcBuilder = builder.Services.AddControllers();
@@ -116,5 +122,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<PositionsHub>("/hubs/positions");
 
 app.Run();

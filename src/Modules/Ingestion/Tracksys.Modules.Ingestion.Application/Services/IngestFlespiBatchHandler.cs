@@ -18,6 +18,7 @@ namespace Tracksys.Modules.Ingestion.Application.Services;
 public class IngestFlespiBatchHandler(
     ITelemetryWriter telemetryWriter,
     FlespiMapper mapper,
+    IPositionBroadcaster broadcaster,
     ILogger<IngestFlespiBatchHandler> logger)
 {
     public async Task<IngestBatchResult> HandleAsync(IReadOnlyList<JsonElement> rawMessages, CancellationToken cancellationToken = default)
@@ -55,6 +56,25 @@ public class IngestFlespiBatchHandler(
             "Ingestion Flespi : {Received} messages reçus, {Inserted} insérés, {Duplicates} doublons ignorés, {Anomalies} anomalies, {ElapsedMs} ms",
             result.Received, result.Inserted, result.DuplicatesIgnored, result.AnomaliesLogged, stopwatch.ElapsedMilliseconds);
 
+        // Push temps réel après le COMMIT réussi uniquement — ne fait jamais échouer
+        // l'ingestion elle-même (le "zéro perte" prime sur la diffusion live).
+        if (points.Count > 0)
+        {
+            try
+            {
+                await broadcaster.BroadcastAsync(points.Select(ToPositionDto).ToList(), cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Échec de la diffusion temps réel des positions (ingestion déjà commitée, sans impact).");
+            }
+        }
+
         return result;
     }
+
+    private static PositionDto ToPositionDto(TelemetryPoint point) => new(
+        point.Ident, point.DeviceTsUtc, point.Latitude, point.Longitude,
+        point.PositionSpeed, point.BatteryLevel,
+        point.ChariotId, point.ChariotNumero, point.DelegataireId, point.PlanningId, point.CircuitId);
 }

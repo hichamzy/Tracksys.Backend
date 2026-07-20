@@ -14,7 +14,7 @@ public class UsersController(UserService userService) : ControllerBase
     public async Task<IActionResult> GetAll() => Ok(await userService.GetAllAsync());
 
     [HttpPost]
-    [Authorize(Roles = "Administrateur")]
+    [Authorize(Roles = "Administrateur,SuperAdmin")]
     public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
     {
         var result = await userService.CreateAsync(request);
@@ -22,7 +22,7 @@ public class UsersController(UserService userService) : ControllerBase
     }
 
     [HttpPut("{id}/role")]
-    [Authorize(Roles = "Administrateur")]
+    [Authorize(Roles = "Administrateur,SuperAdmin")]
     public async Task<IActionResult> ChangeRole(string id, [FromBody] ChangeUserRoleRequest request)
     {
         var result = await userService.ChangeRoleAsync(id, request.Role);
@@ -30,7 +30,7 @@ public class UsersController(UserService userService) : ControllerBase
     }
 
     [HttpPut("{id}/active")]
-    [Authorize(Roles = "Administrateur")]
+    [Authorize(Roles = "Administrateur,SuperAdmin")]
     public async Task<IActionResult> SetActive(string id, [FromBody] SetUserActiveRequest request)
     {
         var result = await userService.SetActiveAsync(id, request.IsActive);

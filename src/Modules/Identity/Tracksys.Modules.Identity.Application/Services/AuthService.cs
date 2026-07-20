@@ -19,7 +19,11 @@ public class AuthService(
 
     public async Task<Result<AuthResponse>> LoginAsync(LoginRequest request, string? ipAddress, CancellationToken cancellationToken = default)
     {
-        ApplicationUser? user = await userManager.FindByEmailAsync(request.Email);
+        // Au moment du login, aucun JWT n'existe encore donc ICurrentTenantAccessor.CityId
+        // est null — le HasQueryFilter global sur ApplicationUser exclurait sinon TOUT
+        // utilisateur rattaché à une ville, empêchant quiconque de se connecter.
+        string normalizedEmail = request.Email.Trim().ToUpperInvariant();
+        ApplicationUser? user = await unitOfWork.FindUserByEmailIgnoringTenantAsync(normalizedEmail, cancellationToken);
         if (user is null || !user.IsActive)
             return Result.Failure<AuthResponse>("Identifiants invalides.");
 
@@ -43,7 +47,9 @@ public class AuthService(
         if (stored is null || !stored.IsActive)
             return Result.Failure<AuthResponse>("Refresh token invalide ou expiré.");
 
-        ApplicationUser? user = await userManager.FindByIdAsync(stored.UserId);
+        // Même raison qu'en LoginAsync : pas de JWT dans une requête de refresh silencieux,
+        // le HasQueryFilter par ville exclurait tout utilisateur tenanté.
+        ApplicationUser? user = await unitOfWork.FindUserByIdIgnoringTenantAsync(stored.UserId, cancellationToken);
         if (user is null || !user.IsActive)
             return Result.Failure<AuthResponse>("Utilisateur introuvable ou inactif.");
 

@@ -5,7 +5,7 @@ using Tracksys.Shared.Kernel.Results;
 
 namespace Tracksys.Modules.Tenancy.Application.Services;
 
-public class CityCommandService(ITenancyUnitOfWork unitOfWork)
+public class CityCommandService(ITenancyUnitOfWork unitOfWork, CityModuleService cityModuleService)
 {
     public async Task<Result<CityDto>> CreateAsync(CreateCityRequest request, CancellationToken cancellationToken = default)
     {
@@ -15,6 +15,9 @@ public class CityCommandService(ITenancyUnitOfWork unitOfWork)
         City city = City.Create(request.Name, request.Code);
         await unitOfWork.Cities.AddAsync(city, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Tous les modules activés par défaut — évite une ville "vide" par accident.
+        await cityModuleService.SeedDefaultModulesAsync(city.Id, cancellationToken);
 
         return new CityDto(city.Id, city.Name, city.Code, city.IsActive);
     }

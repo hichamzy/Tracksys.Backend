@@ -8,9 +8,11 @@ namespace Tracksys.Modules.Tenancy.Infrastructure.Persistence;
 public class TenancyUnitOfWork : UnitOfWork<TenancyDbContext>, ITenancyUnitOfWork
 {
     public IRepository<City, Guid> Cities { get; }
+    public IRepository<CityModule, Guid> CityModules { get; }
 
     public TenancyUnitOfWork(TenancyDbContext dbContext) : base(dbContext)
     {
         Cities = new Repository<City, Guid>(dbContext);
+        CityModules = new Repository<CityModule, Guid>(dbContext);
     }
 }

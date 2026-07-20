@@ -12,4 +12,9 @@ public interface ICurrentTenantAccessor
 {
     Guid? CityId { get; }
     bool IsSuperAdmin { get; }
+
+    /// <summary>Codes de modules activés lus depuis les claims "module" du JWT courant.
+    /// Vide pour un SuperAdmin (jamais émis, non pertinent — accès total implicite) ou
+    /// pour un token sans claim (fail-closed côté RequireModuleAttribute).</summary>
+    IReadOnlyCollection<string> EnabledModules { get; }
 }

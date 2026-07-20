@@ -4,6 +4,7 @@ using Tracksys.Modules.Identity.Application.Abstractions;
 using Tracksys.Modules.Identity.Application.Dtos;
 using Tracksys.Modules.Identity.Application.Options;
 using Tracksys.Modules.Identity.Domain.Entities;
+using Tracksys.Shared.Kernel.Auth;
 using Tracksys.Shared.Kernel.Results;
 using Microsoft.Extensions.Options;
 
@@ -13,6 +14,7 @@ public class AuthService(
     UserManager<ApplicationUser> userManager,
     IJwtTokenGenerator tokenGenerator,
     IIdentityUnitOfWork unitOfWork,
+    ICityModuleResolver cityModuleResolver,
     IOptions<JwtOptions> jwtOptions)
 {
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
@@ -78,12 +80,19 @@ public class AuthService(
     private async Task<Result<AuthResponse>> IssueTokensAsync(
         ApplicationUser user, IList<string> roles, string? ipAddress, CancellationToken cancellationToken)
     {
-        // SuperAdmin (CityId null) n'emporte pas de claim city_id — absence de claim, jamais une
-        // valeur sentinelle, pour que ICurrentTenantAccessor distingue clairement "toutes villes"
-        // (IsSuperAdmin dérivé du rôle) d'un token cassé/sans ville (fail-closed).
+        // SuperAdmin (CityId null) n'emporte ni claim city_id ni claim module — absence de
+        // claim, jamais une valeur sentinelle, pour que ICurrentTenantAccessor distingue
+        // clairement "toutes villes/tous modules" (IsSuperAdmin dérivé du rôle) d'un token
+        // cassé/sans ville (fail-closed).
         List<Claim> extraClaims = [];
+        IReadOnlyList<string> enabledModules = [];
         if (user.CityId is Guid cityId)
+        {
             extraClaims.Add(new Claim("city_id", cityId.ToString()));
+
+            enabledModules = await cityModuleResolver.GetEnabledModuleCodesAsync(cityId, cancellationToken);
+            extraClaims.AddRange(enabledModules.Select(code => new Claim("module", code)));
+        }
 
         GeneratedAccessToken access = tokenGenerator.GenerateAccessToken(user.Id, user.Email!, roles, extraClaims);
         string refreshPlain = tokenGenerator.GenerateRefreshToken();
@@ -103,6 +112,7 @@ public class AuthService(
             user.Email!,
             user.FullName,
             roles.ToList(),
-            user.CityId));
+            user.CityId,
+            enabledModules));
     }
 }

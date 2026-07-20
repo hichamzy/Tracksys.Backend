@@ -9,7 +9,8 @@ namespace Tracksys.Modules.Tenancy.Api.Controllers;
 [Route("api/tenancy/cities")]
 public class CitiesController(
     CityQueryService cityQueryService,
-    CityCommandService cityCommandService) : ControllerBase
+    CityCommandService cityCommandService,
+    CityModuleService cityModuleService) : ControllerBase
 {
     [HttpGet]
     [Authorize(Roles = "SuperAdmin")]
@@ -40,5 +41,20 @@ public class CitiesController(
     {
         var result = await cityCommandService.UpdateAsync(id, request, cancellationToken);
         return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
+    }
+
+    /// <summary>Accessible à tout utilisateur authentifié — un compte non-SuperAdmin peut
+    /// vérifier les modules activés pour sa propre ville (ex. écran de diagnostic front).</summary>
+    [HttpGet("{id:guid}/modules")]
+    [Authorize]
+    public async Task<IActionResult> GetModules(Guid id, CancellationToken cancellationToken) =>
+        Ok(await cityModuleService.GetEnabledModulesAsync(id, cancellationToken));
+
+    [HttpPut("{id:guid}/modules")]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> SetModules(Guid id, [FromBody] UpdateCityModulesRequest request, CancellationToken cancellationToken)
+    {
+        await cityModuleService.SetEnabledModulesAsync(id, request.ModuleCodes, cancellationToken);
+        return NoContent();
     }
 }

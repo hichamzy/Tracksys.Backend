@@ -15,4 +15,7 @@ public class HttpContextTenantAccessor(IHttpContextAccessor accessor) : ICurrent
     }
 
     public bool IsSuperAdmin => accessor.HttpContext?.User.IsInRole("SuperAdmin") ?? false;
+
+    public IReadOnlyCollection<string> EnabledModules =>
+        accessor.HttpContext?.User.FindAll("module").Select(c => c.Value).ToArray() ?? [];
 }

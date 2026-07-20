@@ -21,7 +21,7 @@ public class VehicleQueryService(IFleetUnitOfWork unitOfWork)
                 v.DriveTimeToday, v.LastStopLabel,
                 v.DriverId.HasValue && driversById.TryGetValue(v.DriverId.Value, out var driver) ? driver.FullName : null,
                 vehicleTypesById.TryGetValue(v.VehicleTypeId, out var vehicleType) ? vehicleType.Label : null,
-                v.ImeiTracker, v.FlespiIdent))
+                v.ImeiTracker, v.FlespiIdent, v.CityId))
             .ToList();
     }
 }

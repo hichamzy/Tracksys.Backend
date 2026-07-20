@@ -15,4 +15,5 @@ public record VehicleDto(
     string? DriverName,
     string? VehicleTypeLabel,
     string? ImeiTracker,
-    string? FlespiIdent);
+    string? FlespiIdent,
+    Guid CityId);

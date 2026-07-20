@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tracksys.Modules.Reports.Application.Dtos;
 using Tracksys.Modules.Reports.Application.Services;
+using Tracksys.Shared.Infrastructure.Auth;
 
 namespace Tracksys.Modules.Reports.Api.Controllers;
 
 [ApiController]
 [Authorize]
+[RequireModule("report")]
 [Route("api/reports")]
 public class ReportsController(ReportQueryService reportQueryService, ReportCommandService reportCommandService) : ControllerBase
 {

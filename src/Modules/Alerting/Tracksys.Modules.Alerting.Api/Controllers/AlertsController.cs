@@ -2,11 +2,13 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tracksys.Modules.Alerting.Application.Services;
+using Tracksys.Shared.Infrastructure.Auth;
 
 namespace Tracksys.Modules.Alerting.Api.Controllers;
 
 [ApiController]
 [Authorize]
+[RequireModule("alerts")]
 [Route("api/alerting/alerts")]
 public class AlertsController(AlertQueryService alertQueryService, AlertCommandService alertCommandService) : ControllerBase
 {

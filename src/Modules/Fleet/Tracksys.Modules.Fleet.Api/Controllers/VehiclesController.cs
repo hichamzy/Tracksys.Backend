@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tracksys.Modules.Fleet.Application.Dtos;
 using Tracksys.Modules.Fleet.Application.Services;
+using Tracksys.Shared.Infrastructure.Auth;
 
 namespace Tracksys.Modules.Fleet.Api.Controllers;
 
 [ApiController]
 [Authorize]
+[RequireModule("fleet")]
 [Route("api/fleet/vehicles")]
 public class VehiclesController(VehicleQueryService vehicleQueryService, VehicleCommandService vehicleCommandService) : ControllerBase
 {

@@ -13,4 +13,5 @@ public record AuthResponse(
     string Email,
     string FullName,
     IReadOnlyList<string> Roles,
-    Guid? CityId);
+    Guid? CityId,
+    IReadOnlyList<string> EnabledModules);

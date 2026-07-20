@@ -15,10 +15,11 @@ public class Planning : Entity<long>, IAggregateRoot
     public int? TypePrestationId { get; private set; }
     public DateTime DebutUtc { get; private set; }
     public DateTime FinUtc { get; private set; }
+    public Guid CityId { get; private set; }
 
     private Planning() { }
 
-    public static Planning Create(int chariotId, int? circuitId, int? typePrestationId, DateTime debutUtc, DateTime finUtc)
+    public static Planning Create(Guid cityId, int chariotId, int? circuitId, int? typePrestationId, DateTime debutUtc, DateTime finUtc)
     {
         debutUtc = DateTimeGuard.EnsureUtc(debutUtc, nameof(debutUtc));
         finUtc = DateTimeGuard.EnsureUtc(finUtc, nameof(finUtc));
@@ -27,6 +28,7 @@ public class Planning : Entity<long>, IAggregateRoot
 
         return new Planning
         {
+            CityId = cityId,
             ChariotId = chariotId,
             CircuitId = circuitId,
             TypePrestationId = typePrestationId,

@@ -10,11 +10,13 @@ public class AlertRule : Entity<int>, IAggregateRoot
     public string Unit { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public DateTime? UpdatedAtUtc { get; private set; }
+    public Guid CityId { get; private set; }
 
     private AlertRule() { }
 
-    public static AlertRule Create(string alertTypeCode, decimal threshold, string unit, string? description) => new()
+    public static AlertRule Create(Guid cityId, string alertTypeCode, decimal threshold, string unit, string? description) => new()
     {
+        CityId = cityId,
         AlertTypeCode = alertTypeCode,
         Threshold = threshold,
         Unit = unit,

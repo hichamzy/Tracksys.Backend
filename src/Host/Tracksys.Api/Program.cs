@@ -16,6 +16,10 @@ using Tracksys.Modules.Ingestion.Infrastructure;
 using Tracksys.Modules.Reports.Api;
 using Tracksys.Modules.Reports.Infrastructure;
 using Tracksys.Modules.Ingestion.Application.Abstractions;
+using Tracksys.Modules.Tenancy.Api;
+using Tracksys.Modules.Tenancy.Infrastructure;
+using Tracksys.Shared.Infrastructure.Auth;
+using Tracksys.Shared.Kernel.Auth;
 using Tracksys.Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +31,12 @@ builder.Services.AddCitizenModule(builder.Configuration);
 builder.Services.AddAlertingModule(builder.Configuration);
 builder.Services.AddIngestionModule(builder.Configuration);
 builder.Services.AddReportsModule(builder.Configuration);
+builder.Services.AddTenancyModule(builder.Configuration);
+
+// ----- Multi-tenant par ville : résout city_id/rôle SuperAdmin depuis le JWT courant,
+// injecté dans chaque DbContext de module pour le HasQueryFilter global -----
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentTenantAccessor, HttpContextTenantAccessor>();
 
 // ----- Temps réel positions (SignalR) — push après chaque ingestion Flespi réussie -----
 builder.Services.AddSignalR();
@@ -40,7 +50,8 @@ mvcBuilder
     .AddCitizenApiModule()
     .AddAlertingApiModule()
     .AddIngestionApiModule(builder.Configuration)
-    .AddReportsApiModule();
+    .AddReportsApiModule()
+    .AddTenancyApiModule();
 
 // ----- JWT Bearer -----
 JwtOptions jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()

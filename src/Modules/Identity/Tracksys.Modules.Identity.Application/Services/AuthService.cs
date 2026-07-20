@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Tracksys.Modules.Identity.Application.Abstractions;
 using Tracksys.Modules.Identity.Application.Dtos;
@@ -71,7 +72,14 @@ public class AuthService(
     private async Task<Result<AuthResponse>> IssueTokensAsync(
         ApplicationUser user, IList<string> roles, string? ipAddress, CancellationToken cancellationToken)
     {
-        GeneratedAccessToken access = tokenGenerator.GenerateAccessToken(user.Id, user.Email!, roles);
+        // SuperAdmin (CityId null) n'emporte pas de claim city_id — absence de claim, jamais une
+        // valeur sentinelle, pour que ICurrentTenantAccessor distingue clairement "toutes villes"
+        // (IsSuperAdmin dérivé du rôle) d'un token cassé/sans ville (fail-closed).
+        List<Claim> extraClaims = [];
+        if (user.CityId is Guid cityId)
+            extraClaims.Add(new Claim("city_id", cityId.ToString()));
+
+        GeneratedAccessToken access = tokenGenerator.GenerateAccessToken(user.Id, user.Email!, roles, extraClaims);
         string refreshPlain = tokenGenerator.GenerateRefreshToken();
         string refreshHash = tokenGenerator.HashRefreshToken(refreshPlain);
         DateTime refreshExpiry = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenDays);
@@ -88,6 +96,7 @@ public class AuthService(
             user.Id,
             user.Email!,
             user.FullName,
-            roles.ToList()));
+            roles.ToList(),
+            user.CityId));
     }
 }

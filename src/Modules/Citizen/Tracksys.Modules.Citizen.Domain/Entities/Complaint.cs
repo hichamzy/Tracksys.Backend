@@ -18,12 +18,14 @@ public class Complaint : AuditableEntity<int>, IAggregateRoot
     public DateTime? ResolvedAtUtc { get; private set; }
     public string? PhotoBeforeUrl { get; private set; }
     public string? PhotoAfterUrl { get; private set; }
+    public Guid CityId { get; private set; }
 
     private Complaint() { }
 
     public static Complaint Create(
-        string code, int categoryId, string priority, string zoneLabel, decimal lat, decimal lng, string? reporterName) => new()
+        Guid cityId, string code, int categoryId, string priority, string zoneLabel, decimal lat, decimal lng, string? reporterName) => new()
     {
+        CityId = cityId,
         Code = code,
         CategoryId = categoryId,
         Priority = priority,

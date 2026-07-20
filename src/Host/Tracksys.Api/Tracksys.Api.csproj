@@ -29,6 +29,8 @@
     <ProjectReference Include="..\..\Modules\Ingestion\Tracksys.Modules.Ingestion.Infrastructure\Tracksys.Modules.Ingestion.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Reports\Tracksys.Modules.Reports.Api\Tracksys.Modules.Reports.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Reports\Tracksys.Modules.Reports.Infrastructure\Tracksys.Modules.Reports.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Tenancy\Tracksys.Modules.Tenancy.Api\Tracksys.Modules.Tenancy.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Tenancy\Tracksys.Modules.Tenancy.Infrastructure\Tracksys.Modules.Tenancy.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

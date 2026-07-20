@@ -1,21 +1,28 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tracksys.Modules.Ingestion.Application.Abstractions;
+using Tracksys.Shared.Kernel.Auth;
 
 namespace Tracksys.Modules.Ingestion.Api.Controllers;
 
 /// <summary>
 /// Public par design : carte live et historique GPS consultables sans compte
 /// (décision produit). Ne pas ajouter [Authorize] ici sans revalider ce choix.
+/// Si un JWT valide est fourni (le front est toujours connecté), les résultats sont filtrés
+/// par la ville du token via ICurrentTenantAccessor — sans JWT ou pour un SuperAdmin, aucun
+/// filtre n'est appliqué (comportement legacy inchangé).
 /// </summary>
 [ApiController]
 [AllowAnonymous]
 [Route("api/positions")]
-public class PositionsController(IPositionQueryService positionQueryService) : ControllerBase
+public class PositionsController(IPositionQueryService positionQueryService, ICurrentTenantAccessor tenant) : ControllerBase
 {
     [HttpGet("live")]
-    public async Task<IActionResult> GetLive(CancellationToken cancellationToken) =>
-        Ok(await positionQueryService.GetLiveAsync(cancellationToken));
+    public async Task<IActionResult> GetLive(CancellationToken cancellationToken)
+    {
+        Guid? cityId = tenant.IsSuperAdmin ? null : tenant.CityId;
+        return Ok(await positionQueryService.GetLiveAsync(cityId, cancellationToken));
+    }
 
     [HttpGet("history")]
     public async Task<IActionResult> GetHistory(
@@ -27,6 +34,7 @@ public class PositionsController(IPositionQueryService positionQueryService) : C
         DateTime fromUtc = DateTime.SpecifyKind(from, DateTimeKind.Utc);
         DateTime toUtc = DateTime.SpecifyKind(to, DateTimeKind.Utc);
 
-        return Ok(await positionQueryService.GetHistoryAsync(deviceId, fromUtc, toUtc, cancellationToken));
+        Guid? cityId = tenant.IsSuperAdmin ? null : tenant.CityId;
+        return Ok(await positionQueryService.GetHistoryAsync(deviceId, fromUtc, toUtc, cityId, cancellationToken));
     }
 }

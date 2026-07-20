@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Tracksys.Modules.Identity.Domain.Entities;
+using Tracksys.Shared.Kernel.Auth;
 
 namespace Tracksys.Modules.Identity.Infrastructure.Persistence;
 
@@ -9,7 +10,7 @@ namespace Tracksys.Modules.Identity.Infrastructure.Persistence;
 /// DbContext Identity — mappe les tables AspNet* + RefreshTokens sur le schéma "identity"
 /// (voir database/postgresql/001_tracksys_schema.sql).
 /// </summary>
-public class IdentityDbContext(DbContextOptions<IdentityDbContext> options)
+public class IdentityDbContext(DbContextOptions<IdentityDbContext> options, ICurrentTenantAccessor tenant)
     : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
 {
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
@@ -39,6 +40,12 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options)
             b.Property(u => u.Scope).HasMaxLength(200);
             b.Property(u => u.IsActive).HasDefaultValue(true);
             b.Property(u => u.CreatedAtUtc).HasDefaultValueSql("timezone('utc', now())");
+            b.HasIndex(u => u.CityId);
+
+            // SuperAdmin (CityId == null) voit tous les users ; sinon un user ne voit que les
+            // comptes de sa propre ville. Un token sans claim city_id (CityId == null côté
+            // ICurrentTenantAccessor) et sans rôle SuperAdmin ne matche aucune ligne (fail-closed).
+            b.HasQueryFilter(u => tenant.IsSuperAdmin || u.CityId == tenant.CityId);
         });
 
         builder.Entity<RefreshToken>(b =>

@@ -2,10 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Tracksys.Modules.Fleet.Domain.Entities;
 using Tracksys.Modules.Fleet.Domain.Enums;
 using Tracksys.Shared.Infrastructure.Persistence;
+using Tracksys.Shared.Kernel.Auth;
 
 namespace Tracksys.Modules.Fleet.Infrastructure.Persistence;
 
-public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDbContext(options, "fleet")
+public class FleetDbContext(DbContextOptions<FleetDbContext> options, ICurrentTenantAccessor tenant)
+    : ModuleDbContext(options, "fleet")
 {
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
     public DbSet<VehicleType> VehicleTypes => Set<VehicleType>();
@@ -37,10 +39,12 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
             b.Property(d => d.Phone).HasMaxLength(32);
             b.Property(d => d.LicenceNumber).HasMaxLength(50);
             b.Property(d => d.Status).HasMaxLength(30).HasDefaultValue("En service");
+            b.HasIndex(d => d.CityId);
             b.HasOne<Vehicle>()
                 .WithMany()
                 .HasForeignKey(d => d.CurrentVehicleId)
                 .OnDelete(DeleteBehavior.SetNull);
+            b.HasQueryFilter(d => tenant.IsSuperAdmin || d.CityId == tenant.CityId);
         });
 
         modelBuilder.Entity<Vehicle>(b =>
@@ -54,6 +58,7 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
             b.Property(v => v.ImeiTracker).HasMaxLength(50);
             b.Property(v => v.FlespiIdent).HasMaxLength(50);
             b.HasIndex(v => v.FlespiIdent).IsUnique().HasFilter("flespi_ident IS NOT NULL");
+            b.HasIndex(v => v.CityId);
             b.Property(v => v.SpeedKmh).HasColumnType("decimal(6,2)");
             b.Property(v => v.DistanceTodayKm).HasColumnType("decimal(8,2)");
             b.Property(v => v.LastKnownLat).HasColumnType("decimal(9,6)");
@@ -74,6 +79,8 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
                 .WithMany()
                 .HasForeignKey(v => v.DriverId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            b.HasQueryFilter(v => tenant.IsSuperAdmin || v.CityId == tenant.CityId);
         });
 
         modelBuilder.Entity<Delegataire>(b =>
@@ -81,6 +88,8 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
             b.HasKey(d => d.Id);
             b.Property(d => d.Label).HasMaxLength(150).IsRequired();
             b.HasIndex(d => d.Label).IsUnique();
+            b.HasIndex(d => d.CityId);
+            b.HasQueryFilter(d => tenant.IsSuperAdmin || d.CityId == tenant.CityId);
         });
 
         modelBuilder.Entity<Circuit>(b =>
@@ -88,6 +97,8 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
             b.HasKey(c => c.Id);
             b.Property(c => c.Label).HasMaxLength(150).IsRequired();
             b.HasIndex(c => c.Label).IsUnique();
+            b.HasIndex(c => c.CityId);
+            b.HasQueryFilter(c => tenant.IsSuperAdmin || c.CityId == tenant.CityId);
         });
 
         modelBuilder.Entity<TypePrestation>(b =>
@@ -95,6 +106,8 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
             b.HasKey(t => t.Id);
             b.Property(t => t.Label).HasMaxLength(150).IsRequired();
             b.HasIndex(t => t.Label).IsUnique();
+            b.HasIndex(t => t.CityId);
+            b.HasQueryFilter(t => tenant.IsSuperAdmin || t.CityId == tenant.CityId);
         });
 
         modelBuilder.Entity<Chariot>(b =>
@@ -111,12 +124,16 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
                 .WithMany()
                 .HasForeignKey(c => c.DelegataireId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            b.HasIndex(c => c.CityId);
+            b.HasQueryFilter(c => tenant.IsSuperAdmin || c.CityId == tenant.CityId);
         });
 
         modelBuilder.Entity<Planning>(b =>
         {
             b.HasKey(p => p.Id);
             b.HasIndex(p => new { p.ChariotId, p.DebutUtc, p.FinUtc });
+            b.HasIndex(p => p.CityId);
 
             b.HasOne<Chariot>()
                 .WithMany()
@@ -132,6 +149,8 @@ public class FleetDbContext(DbContextOptions<FleetDbContext> options) : ModuleDb
                 .WithMany()
                 .HasForeignKey(p => p.TypePrestationId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            b.HasQueryFilter(p => tenant.IsSuperAdmin || p.CityId == tenant.CityId);
         });
     }
 }

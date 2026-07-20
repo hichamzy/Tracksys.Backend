@@ -1,15 +1,19 @@
 using Tracksys.Modules.Fleet.Application.Abstractions;
 using Tracksys.Modules.Fleet.Application.Dtos;
 using Tracksys.Modules.Fleet.Domain.Entities;
+using Tracksys.Shared.Kernel.Auth;
 using Tracksys.Shared.Kernel.Results;
 
 namespace Tracksys.Modules.Fleet.Application.Services;
 
-public class DriverCommandService(IFleetUnitOfWork unitOfWork)
+public class DriverCommandService(IFleetUnitOfWork unitOfWork, ICurrentTenantAccessor tenant)
 {
     public async Task<Result<int>> CreateAsync(CreateDriverRequest request, CancellationToken cancellationToken = default)
     {
-        Driver driver = Driver.Create(request.FullName, request.Phone, request.LicenceNumber);
+        if (tenant.CityId is not Guid cityId)
+            return Result.Failure<int>("Aucune ville associée à l'utilisateur courant.");
+
+        Driver driver = Driver.Create(cityId, request.FullName, request.Phone, request.LicenceNumber);
 
         await unitOfWork.Drivers.AddAsync(driver, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);

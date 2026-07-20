@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracksys.Modules.Tenancy.Application\Tracksys.Modules.Tenancy.Application.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Tenancy.Infrastructure\Tracksys.Modules.Tenancy.Infrastructure.csproj" />
+    <ProjectReference Include="..\Tracksys.Modules.Tenancy.Domain\Tracksys.Modules.Tenancy.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -33,6 +33,12 @@
     <Project Path="src/Modules/Ingestion/Tracksys.Modules.Ingestion.Domain/Tracksys.Modules.Ingestion.Domain.csproj" />
     <Project Path="src/Modules/Ingestion/Tracksys.Modules.Ingestion.Infrastructure/Tracksys.Modules.Ingestion.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Modules/Tenancy/">
+    <Project Path="src/Modules/Tenancy/Tracksys.Modules.Tenancy.Api/Tracksys.Modules.Tenancy.Api.csproj" />
+    <Project Path="src/Modules/Tenancy/Tracksys.Modules.Tenancy.Application/Tracksys.Modules.Tenancy.Application.csproj" />
+    <Project Path="src/Modules/Tenancy/Tracksys.Modules.Tenancy.Domain/Tracksys.Modules.Tenancy.Domain.csproj" />
+    <Project Path="src/Modules/Tenancy/Tracksys.Modules.Tenancy.Infrastructure/Tracksys.Modules.Tenancy.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Shared/">
     <Project Path="src/Shared/Tracksys.Shared.Infrastructure/Tracksys.Shared.Infrastructure.csproj" />
     <Project Path="src/Shared/Tracksys.Shared.Kernel/Tracksys.Shared.Kernel.csproj" />

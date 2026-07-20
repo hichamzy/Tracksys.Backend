@@ -6,4 +6,5 @@ public record UserDto(
     string FullName,
     IReadOnlyList<string> Roles,
     string? Scope,
-    bool IsActive);
+    bool IsActive,
+    Guid? CityId);

@@ -2,10 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Tracksys.Modules.Citizen.Domain.Entities;
 using Tracksys.Modules.Citizen.Domain.Enums;
 using Tracksys.Shared.Infrastructure.Persistence;
+using Tracksys.Shared.Kernel.Auth;
 
 namespace Tracksys.Modules.Citizen.Infrastructure.Persistence;
 
-public class CitizenDbContext(DbContextOptions<CitizenDbContext> options) : ModuleDbContext(options, "citizen")
+public class CitizenDbContext(DbContextOptions<CitizenDbContext> options, ICurrentTenantAccessor tenant)
+    : ModuleDbContext(options, "citizen")
 {
     public DbSet<Complaint> Complaints => Set<Complaint>();
     public DbSet<ComplaintCategory> ComplaintCategories => Set<ComplaintCategory>();
@@ -45,6 +47,9 @@ public class CitizenDbContext(DbContextOptions<CitizenDbContext> options) : Modu
                 .WithMany()
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasIndex(c => c.CityId);
+            b.HasQueryFilter(c => tenant.IsSuperAdmin || c.CityId == tenant.CityId);
         });
     }
 }

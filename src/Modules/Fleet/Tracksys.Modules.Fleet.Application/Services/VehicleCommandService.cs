@@ -2,19 +2,23 @@ using Tracksys.Modules.Fleet.Application.Abstractions;
 using Tracksys.Modules.Fleet.Application.Dtos;
 using Tracksys.Modules.Fleet.Domain.Entities;
 using Tracksys.Modules.Fleet.Domain.Enums;
+using Tracksys.Shared.Kernel.Auth;
 using Tracksys.Shared.Kernel.Results;
 
 namespace Tracksys.Modules.Fleet.Application.Services;
 
-public class VehicleCommandService(IFleetUnitOfWork unitOfWork)
+public class VehicleCommandService(IFleetUnitOfWork unitOfWork, ICurrentTenantAccessor tenant)
 {
     public async Task<Result<int>> CreateAsync(CreateVehicleRequest request, CancellationToken cancellationToken = default)
     {
+        if (tenant.CityId is not Guid cityId)
+            return Result.Failure<int>("Aucune ville associée à l'utilisateur courant.");
+
         if (await unitOfWork.Vehicles.AnyAsync(v => v.Code == request.Code, cancellationToken))
             return Result.Failure<int>($"Un véhicule avec le code '{request.Code}' existe déjà.");
 
         Vehicle vehicle = Vehicle.Create(
-            request.Code, request.PlateNumber, request.VehicleTypeId, request.Zone,
+            cityId, request.Code, request.PlateNumber, request.VehicleTypeId, request.Zone,
             request.ImeiTracker, request.FlespiIdent);
 
         await unitOfWork.Vehicles.AddAsync(vehicle, cancellationToken);

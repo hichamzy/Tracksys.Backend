@@ -11,11 +11,13 @@ public class SavedReport : Entity<int>, IAggregateRoot
     public string? FileUrl { get; private set; }
     public DateTime GeneratedAtUtc { get; private set; } = DateTime.UtcNow;
     public string? GeneratedByUserId { get; private set; }
+    public Guid CityId { get; private set; }
 
     private SavedReport() { }
 
-    public static SavedReport Create(int reportTypeId, string name, string periodLabel, string format, string? generatedByUserId) => new()
+    public static SavedReport Create(Guid cityId, int reportTypeId, string name, string periodLabel, string format, string? generatedByUserId) => new()
     {
+        CityId = cityId,
         ReportTypeId = reportTypeId,
         Name = name,
         PeriodLabel = periodLabel,

@@ -11,11 +11,13 @@ public class Driver : AuditableEntity<int>, IAggregateRoot
     public string Status { get; private set; } = "En service";
     public string? ApplicationUserId { get; private set; }
     public int? CurrentVehicleId { get; private set; }
+    public Guid CityId { get; private set; }
 
     private Driver() { }
 
-    public static Driver Create(string fullName, string? phone, string? licenceNumber) => new()
+    public static Driver Create(Guid cityId, string fullName, string? phone, string? licenceNumber) => new()
     {
+        CityId = cityId,
         FullName = fullName,
         Phone = phone,
         LicenceNumber = licenceNumber,

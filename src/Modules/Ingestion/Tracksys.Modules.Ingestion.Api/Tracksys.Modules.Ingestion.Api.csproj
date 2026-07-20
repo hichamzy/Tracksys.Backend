@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Tracksys.Modules.Ingestion.Application\Tracksys.Modules.Ingestion.Application.csproj" />
     <ProjectReference Include="..\Tracksys.Modules.Ingestion.Infrastructure\Tracksys.Modules.Ingestion.Infrastructure.csproj" />
     <ProjectReference Include="..\Tracksys.Modules.Ingestion.Domain\Tracksys.Modules.Ingestion.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Tracksys.Shared.Kernel\Tracksys.Shared.Kernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

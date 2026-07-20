@@ -5,8 +5,9 @@ namespace Tracksys.Modules.Fleet.Domain.Entities;
 public class TypePrestation : Entity<int>
 {
     public string Label { get; private set; } = string.Empty;
+    public Guid CityId { get; private set; }
 
     private TypePrestation() { }
 
-    public static TypePrestation Create(string label) => new() { Label = label };
+    public static TypePrestation Create(Guid cityId, string label) => new() { CityId = cityId, Label = label };
 }

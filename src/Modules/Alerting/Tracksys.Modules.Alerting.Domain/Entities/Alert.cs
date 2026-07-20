@@ -12,11 +12,13 @@ public class Alert : Entity<long>, IAggregateRoot
     public bool IsUnread { get; private set; } = true;
     public DateTime? ReadAtUtc { get; private set; }
     public string? ReadByUserId { get; private set; }
+    public Guid CityId { get; private set; }
 
     private Alert() { }
 
-    public static Alert Create(string code, string alertTypeCode, int vehicleId, string detailText) => new()
+    public static Alert Create(Guid cityId, string code, string alertTypeCode, int vehicleId, string detailText) => new()
     {
+        CityId = cityId,
         Code = code,
         AlertTypeCode = alertTypeCode,
         VehicleId = vehicleId,

@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Tracksys.Modules.Reports.Domain.Entities;
 using Tracksys.Shared.Infrastructure.Persistence;
+using Tracksys.Shared.Kernel.Auth;
 
 namespace Tracksys.Modules.Reports.Infrastructure.Persistence;
 
-public class ReportsDbContext(DbContextOptions<ReportsDbContext> options) : ModuleDbContext(options, "reporting")
+public class ReportsDbContext(DbContextOptions<ReportsDbContext> options, ICurrentTenantAccessor tenant)
+    : ModuleDbContext(options, "reporting")
 {
     public DbSet<SavedReport> SavedReports => Set<SavedReport>();
     public DbSet<ReportType> ReportTypes => Set<ReportType>();
@@ -32,15 +34,19 @@ public class ReportsDbContext(DbContextOptions<ReportsDbContext> options) : Modu
                 .WithMany()
                 .HasForeignKey(r => r.ReportTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasIndex(r => r.CityId);
+            b.HasQueryFilter(r => tenant.IsSuperAdmin || r.CityId == tenant.CityId);
         });
 
         modelBuilder.Entity<FleetMonthlyStat>(b =>
         {
             b.HasKey(s => s.Id);
             b.Property(s => s.YearMonth).HasColumnName("year_month").HasMaxLength(7).IsRequired();
-            b.HasIndex(s => s.YearMonth).IsUnique();
+            b.HasIndex(s => new { s.CityId, s.YearMonth }).IsUnique();
             b.Property(s => s.TotalDistanceKm).HasColumnType("decimal(10,2)");
             b.Property(s => s.ResolutionRatePct).HasColumnType("decimal(5,2)");
+            b.HasQueryFilter(s => tenant.IsSuperAdmin || s.CityId == tenant.CityId);
         });
     }
 }

@@ -16,11 +16,13 @@ public class Chariot : AuditableEntity<int>, IAggregateRoot
     public decimal? LastKnownLat { get; private set; }
     public decimal? LastKnownLng { get; private set; }
     public DateTime? LastPositionAtUtc { get; private set; }
+    public Guid CityId { get; private set; }
 
     private Chariot() { }
 
-    public static Chariot Create(string numero, int? delegataireId, int? boitierId, string? flespiIdent = null) => new()
+    public static Chariot Create(Guid cityId, string numero, int? delegataireId, int? boitierId, string? flespiIdent = null) => new()
     {
+        CityId = cityId,
         Numero = numero,
         DelegataireId = delegataireId,
         BoitierId = boitierId,

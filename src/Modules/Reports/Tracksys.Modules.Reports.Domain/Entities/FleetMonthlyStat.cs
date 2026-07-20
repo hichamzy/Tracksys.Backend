@@ -10,6 +10,7 @@ public class FleetMonthlyStat : Entity<int>
     public int ToursCompleted { get; private set; }
     public int ComplaintsHandled { get; private set; }
     public int AvgResponseMinutes { get; private set; }
+    public Guid CityId { get; private set; }
 
     private FleetMonthlyStat() { }
 }

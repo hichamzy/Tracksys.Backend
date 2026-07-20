@@ -13,4 +13,7 @@ public class ApplicationUser : IdentityUser
     public bool IsActive { get; set; } = true;
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+
+    /// <summary>Ville d'appartenance. Null uniquement pour un compte SuperAdmin (accès toutes villes).</summary>
+    public Guid? CityId { get; set; }
 }

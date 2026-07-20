@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Tracksys.Modules.Identity.Application.Dtos;
 using Tracksys.Modules.Identity.Domain.Entities;
+using Tracksys.Shared.Kernel.Auth;
 using Tracksys.Shared.Kernel.Results;
 
 namespace Tracksys.Modules.Identity.Application.Services;
 
-public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, ICurrentTenantAccessor tenant)
 {
     public async Task<IReadOnlyList<UserDto>> GetAllAsync()
     {
@@ -15,7 +16,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         foreach (ApplicationUser user in users)
         {
             IList<string> roles = await userManager.GetRolesAsync(user);
-            result.Add(new UserDto(user.Id, user.Email!, user.FullName, roles.ToList(), user.Scope, user.IsActive));
+            result.Add(new UserDto(user.Id, user.Email!, user.FullName, roles.ToList(), user.Scope, user.IsActive, user.CityId));
         }
 
         return result;
@@ -26,6 +27,14 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         if (!await roleManager.RoleExistsAsync(request.Role))
             return Result.Failure<string>($"Le rôle '{request.Role}' n'existe pas.");
 
+        // Un Administrateur de ville crée toujours dans SA ville, quoi qu'il envoie dans le
+        // payload — seul un SuperAdmin peut choisir librement (ou laisser CityId null pour
+        // créer un autre compte SuperAdmin). Ne jamais faire confiance au CityId du payload
+        // client pour un appelant non-SuperAdmin (fuite de données inter-villes sinon).
+        Guid? effectiveCityId = tenant.IsSuperAdmin ? request.CityId : tenant.CityId;
+        if (effectiveCityId is null && !tenant.IsSuperAdmin)
+            return Result.Failure<string>("Aucune ville associée à l'utilisateur courant.");
+
         ApplicationUser user = new()
         {
             UserName = request.Email,
@@ -33,6 +42,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
             FullName = request.FullName,
             Scope = request.Scope,
             IsActive = true,
+            CityId = effectiveCityId,
         };
 
         IdentityResult createResult = await userManager.CreateAsync(user, request.Password);
